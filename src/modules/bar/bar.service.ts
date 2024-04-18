@@ -14,6 +14,14 @@ export class BarService {
     private readonly semiFinishedDailyRepository: Repository<SemiFinishedDaily>,
   ) {}
 
+  private getDateString(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   async addReport(message: AddReportDto): Promise<void> {
     // Логика добавления или обновления списка на сегодняшний день
     // Здесь вы можете использовать методы TypeORM для сохранения данных в базу данных
@@ -30,12 +38,10 @@ export class BarService {
     for (const { answers, name } of message.data) {
       const { id: settingId } = settingsMap.get(name);
 
-      const day = (new Date()).toISOString().split('T')[0];
-
       const report = await this.semiFinishedDailyRepository.findOne({
         where: {
           settingId,
-          timeWhenCreated: new Date(day),
+          timeWhenCreated: this.getDateString(new Date()),
         },
       });
 
@@ -46,24 +52,40 @@ export class BarService {
         await this.semiFinishedDailyRepository.save({
           settingId,
           answers,
-          timeWhenCreated: new Date(),
+          timeWhenCreated: this.getDateString(new Date()),
         });
       }
     }
   }
 
-  async getReport(page: number): Promise<any> {
-    const limit = 10;
-    page = page || 1;
-    const offset = (page - 1) * limit;
-    const [reports, totalCount] =
-      await this.semiFinishedDailyRepository.findAndCount({
-        order: { timeWhenCreated: 'DESC' },
-        take: limit,
-        skip: offset,
+  async getReport(date: Date): Promise<any> {
+    const reports = [];
+    const settings = await this.semiFinishedSettingsRepository.find();
+    const dailyReports = await this.semiFinishedDailyRepository.find({
+      where: {
+        timeWhenCreated: this.getDateString(new Date(date)),
+      },
+    });
+
+    for (const report of dailyReports) {
+      const setting = settings.find(
+        (setting) => report.settingId === setting.id,
+      );
+      const answers = report.answers
+        .map((answer) => {
+          return setting.answers[answer];
+        })
+        .filter((answer) => {
+          return answer !== undefined;
+        });
+
+      reports.push({
+        title: setting.title,
+        answers: answers,
       });
-    const totalPages = Math.ceil(totalCount / limit);
-    return { reports, totalPages, currentPage: page };
+    }
+
+    return reports;
   }
 
   async getDailySemiFinished() {

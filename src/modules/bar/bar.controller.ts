@@ -12,12 +12,11 @@ export class BarController {
   }
 
   @Get('reports')
-  async getReport(@Query('page') page: number): Promise<any> {
+  async getReport(@Query('date') date: string): Promise<any> {
     try {
-      const data = await this.barService.getReport(page);
       return {
         status: 'OK',
-        data,
+        data: await this.barService.getReport(new Date(date)),
       };
     } catch (error) {
       return {
