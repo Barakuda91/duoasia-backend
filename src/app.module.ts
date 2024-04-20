@@ -2,6 +2,8 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RequestLoggingMiddleware } from './request-logging.middleware';
 import { BarModule } from './modules/bar/bar.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -17,6 +19,9 @@ import { BarModule } from './modules/bar/bar.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
     BarModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'frontend', 'dist'),
+    }),
   ],
   controllers: [],
   providers: [],
