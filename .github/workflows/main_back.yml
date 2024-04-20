@@ -31,5 +31,5 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
           REMOTE_PORT: ${{ secrets.SERVER_SSH_PORT }}
-          SOURCE: backend
-          TARGET: /var/www/duoasia
+          SOURCE: dist
+          TARGET: /var/www/duoasia/backend
