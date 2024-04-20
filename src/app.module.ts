@@ -20,7 +20,7 @@ import { join } from 'path';
     }),
     BarModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'frontend', 'dist'),
+      rootPath: join('/root/duoasia-frontend/dist'),
     }),
   ],
   controllers: [],
