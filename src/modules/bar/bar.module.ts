@@ -14,8 +14,6 @@ import { SemiFinishedDaily } from '../../models/semiFinishedDaily.entity';
     }),
   ],
   controllers: [BarController],
-  providers: [
-    BarService,
-  ],
+  providers: [BarService],
 })
 export class BarModule {}

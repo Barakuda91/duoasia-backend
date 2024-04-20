@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SemiFinishedDaily } from '../../models/semiFinishedDaily.entity';
 import { AddReportDto } from './dto/addReport.dto';
+import {SettingDto} from "./dto/settings.dto";
+import {IsArray, IsNotEmpty, IsString} from "class-validator";
 
 @Injectable()
 export class BarService {
@@ -20,6 +22,53 @@ export class BarService {
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  async addNewSetting(setting) {
+    const row = await this.semiFinishedSettingsRepository.save({
+      title: setting.title,
+      required: true,
+      type: setting.type,
+      answers: setting.answers,
+    });
+
+    row.name = `g${row.id}`;
+
+    return row;
+  }
+
+  async updateSetting(setting: SettingDto) {
+    if (!setting.id) {
+      return {
+        status: 'ERROR',
+        error: 'param id is required',
+      };
+    }
+
+    const updated: any = {};
+
+    if (setting.title) {
+      updated.title = setting.title;
+    }
+
+    if (setting.type) {
+      updated.type = setting.type;
+    }
+
+    if (setting.answers) {
+      updated.answers = setting.answers;
+    }
+
+    return this.semiFinishedSettingsRepository.update(
+      {
+        id: setting.id,
+      },
+      updated,
+    );
+  }
+
+  async removeSetting(settingId: number) {
+    return this.semiFinishedSettingsRepository.delete(settingId);
   }
 
   async addReport(message: AddReportDto): Promise<void> {

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert} from 'typeorm';
 
 @Entity({ name: 'semi_finished_settings' })
 export class SemiFinishedSettings {
@@ -8,14 +8,14 @@ export class SemiFinishedSettings {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ default: true })
   required: boolean;
 
-  @Column()
+  @Column({ default: 'radio' })
   type: string;
 
-  @Column()
-  name: string;
+  @Column({ default: null })
+  name?: string;
 
   @Column({ type: 'json' })
   answers: string[];

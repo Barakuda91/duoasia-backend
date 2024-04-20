@@ -1,14 +1,35 @@
-import { Controller, Get, Post, Body, Query, ValidationPipe } from '@nestjs/common';
+import {Controller, Get, Post, Body, Query, ValidationPipe, UseInterceptors} from '@nestjs/common';
 import { BarService } from './bar.service';
 import { AddReportDto } from './dto/addReport.dto';
+import { SettingDto } from './dto/settings.dto';
+import {TryCatchInterceptor} from "../../common/TryCatchInterceptor";
 
 @Controller('bar')
 export class BarController {
   constructor(private readonly barService: BarService) {}
 
+  @Post('update_setting')
+  async updateSettings(@Body() data: SettingDto) {
+    return await this.barService.updateSetting(data);
+  }
+
+  @Post('remove_setting')
+  async removeSettings(@Body('idToRemove') idToRemove: number) {
+    await this.barService.removeSetting(idToRemove);
+
+    return {
+      status: 'OK',
+    };
+  }
+
+  @Post('new_setting')
+  async saveNewSettings(@Body() data: SettingDto) {
+    return await this.barService.addNewSetting(data);
+  }
+
   @Post('daily_report')
   async addReport(@Body() data: AddReportDto): Promise<void> {
-    await this.barService.addReport(data);
+    return await this.barService.addReport(data);
   }
 
   @Get('reports')
