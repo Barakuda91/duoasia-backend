@@ -34,6 +34,12 @@ export class BarService {
 
     row.name = `g${row.id}`;
 
+    await this.semiFinishedSettingsRepository.update(
+      {
+        id: row.id,
+      },
+      row,
+    );
     return row;
   }
 
