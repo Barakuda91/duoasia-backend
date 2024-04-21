@@ -130,7 +130,11 @@ export class BarService {
       if (report) {
         const answers = report.answers
           .map((answer) => {
-            return setting.answers[answer];
+            if (setting) {
+              return setting.answers[answer];
+            } else {
+              return [];
+            }
           })
           .filter((answer) => {
             return answer !== undefined;
