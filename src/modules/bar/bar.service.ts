@@ -127,21 +127,20 @@ export class BarService {
         (setting) => report.settingId === setting.id,
       );
 
-      let answers;
-      if (report.answers) {
-        answers = report.answers
+      if (report) {
+        const answers = report.answers
           .map((answer) => {
             return setting.answers[answer];
           })
           .filter((answer) => {
             return answer !== undefined;
           });
-      }
 
-      reports.push({
-        title: setting.title,
-        answers: answers,
-      });
+        reports.push({
+          title: setting.title,
+          answers: answers,
+        });
+      }
     }
 
     return reports;
