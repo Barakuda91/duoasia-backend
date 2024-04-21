@@ -127,7 +127,7 @@ export class BarService {
         (setting) => report.settingId === setting.id,
       );
 
-      if (report) {
+      if (report && setting) {
         const answers = report.answers
           .map((answer) => {
             if (setting) {
