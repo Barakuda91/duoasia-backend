@@ -40,9 +40,10 @@ export class BarController {
         data: await this.barService.getReport(new Date(date)),
       };
     } catch (error) {
+      console.log('reports.error', error);
       return {
         status: 'ERROR',
-        error,
+        error: error.message,
       };
     }
   }
