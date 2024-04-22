@@ -1,12 +1,18 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { TelegrafModule } from 'nestjs-telegraf';
 import { RequestLoggingMiddleware } from './request-logging.middleware';
 import { BarModule } from './modules/bar/bar.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BotModule } from './modules/bot/bot.module';
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
   imports: [
+    TelegrafModule.forRoot({
+      token: process.env.TG_BOT_TOKEN,
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.MYSQL_HOST,
@@ -18,10 +24,12 @@ import { join } from 'path';
       charset: 'utf8_general_ci',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
-    BarModule,
     ServeStaticModule.forRoot({
       rootPath: join('/root/duoasia-frontend/dist'),
     }),
+    ScheduleModule.forRoot(),
+    BarModule,
+    BotModule,
   ],
   controllers: [],
   providers: [],
