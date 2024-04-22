@@ -1,10 +1,5 @@
 import {
   Update,
-  Ctx,
-  Start,
-  Help,
-  On,
-  Hears,
   InjectBot,
 } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
@@ -33,13 +28,13 @@ export class BotService {
     return `${year}-${month}-${day}`;
   }
 
-  @Cron('40 * * * * *')
+  @Cron('10 50 4 * * *')
   async handleCron() {
     const reports = [];
     const settings = await this.semiFinishedSettingsRepository.find();
     const dailyReports = await this.semiFinishedDailyRepository.find({
       where: {
-        timeWhenCreated: this.getDateString(new Date('2024-04-22')),
+        timeWhenCreated: this.getDateString(new Date()),
       },
     });
 
