@@ -28,7 +28,7 @@ export class BotService {
     return `${year}-${month}-${day}`;
   }
 
-  @Cron('10 50 4 * * *')
+  @Cron('10 55 1 * * *')
   async handleCron() {
     const reports = [];
     const settings = await this.semiFinishedSettingsRepository.find();
