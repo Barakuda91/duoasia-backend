@@ -28,8 +28,19 @@ export class BarController {
   }
 
   @Post('daily_report')
-  async addReport(@Body() data: AddReportDto): Promise<void> {
-    return await this.barService.addReport(data);
+  async addReport(@Body() data: AddReportDto): Promise<any> {
+    try {
+      return {
+        status: 'OK',
+        data: await this.barService.addReport(data),
+      };
+    } catch (error) {
+      console.log('daily_report.error', error);
+      return {
+        status: 'ERROR',
+        error: error.message,
+      };
+    }
   }
 
   @Get('reports')
