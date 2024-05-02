@@ -101,14 +101,13 @@ export class BarService {
 
       if (report) {
         report.answers = answers;
-        console.log(report);
-        // await this.semiFinishedDailyRepository.save(report);
+        await this.semiFinishedDailyRepository.save(report);
       } else {
-        // await this.semiFinishedDailyRepository.save({
-        //   settingId,
-        //   answers,
-        //   timeWhenCreated: this.getDateString(new Date()),
-        // });
+        await this.semiFinishedDailyRepository.save({
+          settingId,
+          answers,
+          timeWhenCreated: this.getDateString(new Date()),
+        });
       }
     }
   }
