@@ -1,14 +1,11 @@
-import {
-  Update,
-  InjectBot,
-} from 'nestjs-telegraf';
+import { Update, InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
-import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SemiFinishedSettings } from '../../models/semiFinishedSettings.entity';
 import { Repository } from 'typeorm';
 import { SemiFinishedDaily } from '../../models/semiFinishedDaily.entity';
-const chatId = '-4127696309';
+// const chatId = '-4127696309'; // тестовая группа
+const chatId = '-1001911048099'; // рабочая группа
 
 @Update()
 export class BotService {
@@ -28,8 +25,8 @@ export class BotService {
     return `${year}-${month}-${day}`;
   }
 
-  @Cron('10 55 1 * * *')
-  async handleCron() {
+  // @Cron('10 55 1 * * *')
+  async sendReportToChat() {
     const reports = [];
     const settings = await this.semiFinishedSettingsRepository.find();
     const dailyReports = await this.semiFinishedDailyRepository.find({
@@ -65,19 +62,20 @@ export class BotService {
 
     const contains = (arr, value) => arr.some((item) => item.includes(value));
 
-    const markdownText =
-      'Сегодня требуется заготовить:\n' +
-      reports
-        .filter((item) => !contains(item.answers, 'Есть'))
-        .map((item) => {
-          const filteredAnswers = item.answers.filter(
-            (answer) => answer !== 'Надо делать',
-          );
-          const text = item.title.replace(/\([^()]*\)/g, '').trim();
+    const markdownText = reports.length
+      ? 'Сегодня требуется заготовить:\n' +
+        reports
+          .filter((item) => !contains(item.answers, 'Есть'))
+          .map((item) => {
+            const filteredAnswers = item.answers.filter(
+              (answer) => answer !== 'Надо делать',
+            );
+            const text = item.title.replace(/\([^()]*\)/g, '').trim();
 
-          return `- ${text}${filteredAnswers.length ? ': ' : ''} ${filteredAnswers.join(', ')}`;
-        })
-        .join('\n');
+            return `- ${text}${filteredAnswers.length ? ': ' : ''} ${filteredAnswers.join(', ')}`;
+          })
+          .join('\n')
+      : 'Отчет заполнен. Делать ничего не надо';
 
     this.bot.telegram.sendMessage(chatId, markdownText);
   }

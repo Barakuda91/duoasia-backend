@@ -4,8 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SemiFinishedDaily } from '../../models/semiFinishedDaily.entity';
 import { AddReportDto } from './dto/addReport.dto';
-import {SettingDto} from "./dto/settings.dto";
-import {IsArray, IsNotEmpty, IsString} from "class-validator";
+import { SettingDto } from './dto/settings.dto';
 
 @Injectable()
 export class BarService {
@@ -102,13 +101,14 @@ export class BarService {
 
       if (report) {
         report.answers = answers;
-        await this.semiFinishedDailyRepository.save(report);
+        console.log(report);
+        // await this.semiFinishedDailyRepository.save(report);
       } else {
-        await this.semiFinishedDailyRepository.save({
-          settingId,
-          answers,
-          timeWhenCreated: this.getDateString(new Date()),
-        });
+        // await this.semiFinishedDailyRepository.save({
+        //   settingId,
+        //   answers,
+        //   timeWhenCreated: this.getDateString(new Date()),
+        // });
       }
     }
   }
@@ -155,6 +155,8 @@ export class BarService {
   }
 
   async createDB() {
+    return;
+
     try {
       const data = [
         {

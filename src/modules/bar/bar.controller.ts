@@ -1,12 +1,15 @@
-import {Controller, Get, Post, Body, Query, ValidationPipe, UseInterceptors} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { BarService } from './bar.service';
 import { AddReportDto } from './dto/addReport.dto';
 import { SettingDto } from './dto/settings.dto';
-import {TryCatchInterceptor} from "../../common/TryCatchInterceptor";
+import { BotService } from '../bot/bot.sevice';
 
 @Controller('bar')
 export class BarController {
-  constructor(private readonly barService: BarService) {}
+  constructor(
+    private readonly barService: BarService,
+    private readonly botService: BotService,
+  ) {}
 
   @Post('update_setting')
   async updateSettings(@Body() data: SettingDto) {
@@ -28,14 +31,19 @@ export class BarController {
   }
 
   @Post('daily_report')
-  async addReport(@Body() data: AddReportDto): Promise<any> {
+  async addReport(@Body() reqData: AddReportDto): Promise<any> {
     try {
+      const data = await this.barService.addReport(reqData);
+
+      await this.botService.sendReportToChat();
+
       return {
         status: 'OK',
-        data: await this.barService.addReport(data),
+        data,
       };
     } catch (error) {
       console.log('daily_report.error', error);
+
       return {
         status: 'ERROR',
         error: error.message,
