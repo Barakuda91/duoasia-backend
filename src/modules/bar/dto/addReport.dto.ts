@@ -8,7 +8,7 @@ class AnswerDto {
 
   @IsArray()
   @IsNotEmpty()
-  answers: string[];
+  answers: number[];
 }
 
 export class AddReportDto {

@@ -13,7 +13,7 @@ export class SemiFinishedDaily {
   settingId: number;
 
   @Column('json')
-  answers: string[];
+  answers: number[];
 
   @Column({ name: 'time_when_created' })
   timeWhenCreated: string;
