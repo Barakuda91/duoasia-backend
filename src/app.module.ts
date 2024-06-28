@@ -7,6 +7,10 @@ import { BarModule } from './modules/bar/bar.module';
 import { join } from 'path';
 import { BotModule } from './modules/bot/bot.module';
 import {ScheduleModule} from "@nestjs/schedule";
+import { UsersModule } from './modules/users/users.module';
+import { UsersController } from './modules/users/users.controller';
+// import { UsersService } from './modules/users/users.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -30,9 +34,11 @@ import {ScheduleModule} from "@nestjs/schedule";
     ScheduleModule.forRoot(),
     BarModule,
     BotModule,
+    UsersModule,
+    AuthModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [UsersController],
+  // providers: [UsersService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
