@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn  } from "typeorm";
+import { 
+    Entity, 
+    Column, 
+    PrimaryGeneratedColumn, 
+    OneToOne, 
+    JoinColumn, 
+    CreateDateColumn, 
+    UpdateDateColumn  } 
+from "typeorm";
+
 import { UserType } from "./types.entity";
 
 @Entity({name: 'users'})
@@ -21,7 +30,7 @@ export class  User {
     @Column({type: 'date'})
     last_visit: Date;
 
-    @OneToOne(() => UserType, (UserType) => UserType.id)
+    @OneToOne(() => UserType)
     @JoinColumn()
     type_id: UserType;
 

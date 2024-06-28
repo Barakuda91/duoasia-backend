@@ -10,9 +10,11 @@ export class AuthController {
     @Post('/login')
     login(@Res() res: Response, @Body() userDto: createUserDto){
         const token = this.authService.login(userDto)
+
         res.cookie('auth_token', token, {
             maxAge: 3600000
         })
+        
         return res.send({
             message: 'OK'
         })
