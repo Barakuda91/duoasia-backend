@@ -20,7 +20,4 @@ export class createUserDto{
     @IsNotEmpty()
     tg_token: string;
 
-    @IsString()
-    @IsNotEmpty()
-    auth_token: string;
 }

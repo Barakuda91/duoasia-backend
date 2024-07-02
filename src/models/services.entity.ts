@@ -3,8 +3,11 @@ import {
     Column, 
     PrimaryGeneratedColumn, 
     CreateDateColumn, 
+    ManyToMany,
+    JoinTable,
     UpdateDateColumn } 
 from "typeorm";
+import { User } from "./users.entity";
 
 @Entity({name: 'services'})
 export class Service{
@@ -16,6 +19,10 @@ export class Service{
 
     @Column()
     description: string;
+
+    @ManyToMany(() => User, (user) => user.services)
+    @JoinTable()
+    users: User[]
 
     @CreateDateColumn()
     created_at: Date

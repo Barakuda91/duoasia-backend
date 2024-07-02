@@ -1,14 +1,18 @@
+import { userInfo } from "os";
 import { 
     Entity, 
     Column, 
     PrimaryGeneratedColumn, 
     CreateDateColumn, 
     UpdateDateColumn, 
-    OneToOne, 
+    OneToOne,
+    ManyToMany,
+    JoinTable,
     JoinColumn } 
 from "typeorm";
 
 import { Service } from "./services.entity";
+import { User } from "./users.entity";
 
 @Entity({name: 'rooms'})
 export class Room{
@@ -18,6 +22,10 @@ export class Room{
     @OneToOne(() => Service)
     @JoinColumn()
     services_id: Service;
+
+    @ManyToMany(() => User, (user) => user.rooms)
+    @JoinTable()
+    users: User[]
 
     @Column()
     title: string;

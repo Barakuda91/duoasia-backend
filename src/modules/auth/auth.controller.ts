@@ -7,16 +7,22 @@ import { AuthService } from './auth.service';
 export class AuthController {
     constructor(private authService: AuthService){}
 
-    @Post('/login')
-    login(@Res() res: Response, @Body() userDto: createUserDto){
-        const token = this.authService.login(userDto)
-
-        res.cookie('auth_token', token, {
-            maxAge: 3600000
-        })
+    // @Post('/login')
+    // login(@Res() res: Response, @Body() userDto: createUserDto){
+    //     const token = this.authService.login(userDto)
         
-        return res.send({
-            message: 'OK'
-        })
+    //     return res.send({
+    //         message: 'OK'
+    //     })
+    // }
+
+    @Post('/login')
+    login(@Body() userDto: createUserDto){
+        return this.authService.login(userDto)
+    }
+
+    @Post('/registration')
+    userRegistration(@Body() userDto: createUserDto){
+        return this.authService.userRegistration(userDto)
     }
 }
