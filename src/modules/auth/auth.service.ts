@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException, HttpException, HttpStatus, Res } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcryptjs'
+import { hashUserPassword } from 'src/helpers/hash-password.helper';
 import { createUserDto } from '../users/dto/create-user-dto';
 
 
@@ -24,12 +24,11 @@ export class AuthService {
         if(candidate){
             throw new HttpException('Пользователь с таким именем существует', HttpStatus.BAD_REQUEST)
         }
-        // тут не используем шифрование с bcrypt а просто делаем обычный хеш
-        const hashPassword = await bcrypt.hash(userDto.password, 5)  
+        // хешируем пароль который пользователь вводит при регистрации
+        const hashPassword =  hashUserPassword(userDto.password);
 
         const user = await this.userService.createUser({...userDto, password: hashPassword})
 
-        // вернуть пользователя
         return user
     }
 
@@ -37,8 +36,8 @@ export class AuthService {
     private async validateUser(userDto: createUserDto){
         const user = await this.userService.getUserByLogin(userDto.login)
 
-        // а здесь сравниваем две строки одну прешедшую с фронта с паролем(хеш) лежащим в базе
-        const password = await bcrypt.compare(userDto.password, user.pass_hash)
+        // сравнение хешированных паролей с фронта и бэк (SHA256)
+        const password =  userDto.password === user.pass_hash ? true : false
 
         if(user && password){
             return user
