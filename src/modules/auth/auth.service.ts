@@ -1,17 +1,21 @@
-import { Injectable, UnauthorizedException, Req, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpException, HttpStatus, Res } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs'
-import { JwtService } from '@nestjs/jwt/dist';
-import { User } from 'src/models/users.entity';
 import { createUserDto } from '../users/dto/create-user-dto';
+
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UsersService, private jwtService: JwtService) {}
+    constructor(private userService: UsersService) {}
 
-    async login(userDto: createUserDto){
+    async login(userDto: createUserDto, response: any){
         const user = await this.validateUser(userDto)
-        return this.generateToken(user)
+        // получил токен авторизации из пользователя
+        const token = user.auth_token
+
+        response.cookie('auth_token', token, {httpOnly: true})
+        
+        response.send({message: 'Авторизация прошла успешно', user: user})
     }
 
     async userRegistration(userDto: createUserDto){
@@ -20,22 +24,20 @@ export class AuthService {
         if(candidate){
             throw new HttpException('Пользователь с таким именем существует', HttpStatus.BAD_REQUEST)
         }
+        // тут не используем шифрование с bcrypt а просто делаем обычный хеш
+        const hashPassword = await bcrypt.hash(userDto.password, 5)  
 
-        const hashPassword = await bcrypt.hash(userDto.password, 5)   
         const user = await this.userService.createUser({...userDto, password: hashPassword})
 
-        return this.generateToken(user)
+        // вернуть пользователя
+        return user
     }
 
-    private async generateToken(user: User){
-        const payload = {login: user.login, id: user.id}
-        return {
-            token: this.jwtService.sign(payload)
-        }
-    }
 
     private async validateUser(userDto: createUserDto){
         const user = await this.userService.getUserByLogin(userDto.login)
+
+        // а здесь сравниваем две строки одну прешедшую с фронта с паролем(хеш) лежащим в базе
         const password = await bcrypt.compare(userDto.password, user.pass_hash)
 
         if(user && password){
