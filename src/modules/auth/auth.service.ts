@@ -1,6 +1,6 @@
-import { Injectable, UnauthorizedException, HttpException, HttpStatus, Res } from '@nestjs/common';
+import { Injectable, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { hashUserPassword } from 'src/helpers/hash-password.helper';
+import { hashUserPassword } from 'src/helpers/index.helper';
 import { createUserDto } from '../users/dto/create-user-dto';
 
 
@@ -37,9 +37,9 @@ export class AuthService {
         const user = await this.userService.getUserByLogin(userDto.login)
 
         // сравнение хешированных паролей с фронта и бэк (SHA256)
-        const password =  userDto.password === user.pass_hash ? true : false
+        const isPasswordCorrect =  userDto.password === user.pass_hash 
 
-        if(user && password){
+        if(user && isPasswordCorrect){
             return user
         }
 

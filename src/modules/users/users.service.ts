@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { generateRandomString } from 'src/helpers/random-string.helper';
+import { generateRandomString } from 'src/helpers/index.helper';
 import { User } from 'src/models/users.entity';
 import { Repository } from 'typeorm';
 import { createUserDto } from './dto/create-user-dto';
