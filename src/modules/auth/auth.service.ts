@@ -36,6 +36,9 @@ export class AuthService {
     private async validateUser(userDto: createUserDto){
         const user = await this.userService.getUserByLogin(userDto.login)
 
+        if (!user) {
+            throw new UnauthorizedException({message: 'Некорректный Login или пароль'});
+        }
         // сравнение хешированных паролей с фронта и бэк (SHA256)
         const isPasswordCorrect =  userDto.password === user.pass_hash 
 
@@ -43,7 +46,7 @@ export class AuthService {
             return user
         }
 
-        throw new UnauthorizedException({message: 'Некорректный Login или пароль'})
+        throw new UnauthorizedException({message: 'Некорректный Login или пароль'});
     }
 }
 
