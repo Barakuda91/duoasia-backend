@@ -6,7 +6,7 @@ import { RequestLoggingMiddleware } from './request-logging.middleware';
 import { BarModule } from './modules/bar/bar.module';
 import { join } from 'path';
 import { BotModule } from './modules/bot/bot.module';
-import {ScheduleModule} from "@nestjs/schedule";
+import { ScheduleModule } from '@nestjs/schedule';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 
@@ -23,7 +23,7 @@ import { AuthModule } from './modules/auth/auth.module';
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
       synchronize: true,
-      charset: 'utf8_general_ci',
+      charset: 'utf8',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
     ServeStaticModule.forRoot({
@@ -35,8 +35,6 @@ import { AuthModule } from './modules/auth/auth.module';
     UsersModule,
     AuthModule,
   ],
-  // controllers: [UsersController],
-  // providers: [UsersService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

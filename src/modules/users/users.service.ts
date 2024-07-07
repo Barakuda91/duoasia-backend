@@ -7,37 +7,33 @@ import { createUserDto } from './dto/create-user-dto';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(User) private userRepository: Repository<User>){}
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
-    async createUser(dto: createUserDto){
-        const token = generateRandomString(20)
+  async createUser(dto: createUserDto) {
+    const token = generateRandomString(20);
 
-        const user = await this.userRepository.save({
-            login: dto.login,
-            pass_hash: dto.password,
-            name: dto.name,
-            second_name: dto.second_name,
-            tg_token: dto.tg_token,
-            auth_token: token,
-            last_visit: new Date()
-        })
-        return user;
-    }
+    return await this.userRepository.save({
+      login: dto.login,
+      pass_hash: dto.password,
+      name: dto.name,
+      second_name: dto.second_name,
+      tg_token: dto.tg_token,
+      auth_token: token,
+      last_visit: new Date(),
+    });
+  }
 
-    async getAllUsers(){
-        const users = await this.userRepository.find()
-        return users
-    }
+  async getAllUsers() {
+    return await this.userRepository.find();
+  }
 
-    async getUserByLogin(login: string){
-        const user = await this.userRepository.findOne({where: {login}})
-        return user
-    }
+  async getUserByLogin(login: string) {
+    return await this.userRepository.findOne({ where: { login } });
+  }
 
-    async getUserByToken(auth_token: string){
-        const user = await this.userRepository.findOne({where: {auth_token}})
-        return user
-    }
-
-   
+  async getUserByToken(auth_token: string) {
+    return await this.userRepository.findOne({ where: { auth_token } });
+  }
 }

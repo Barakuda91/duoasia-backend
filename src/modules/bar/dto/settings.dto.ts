@@ -1,5 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
 export class SettingDto {
   @IsNotEmpty()

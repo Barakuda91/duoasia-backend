@@ -72,7 +72,9 @@ export class BotService {
             );
             const text = item.title.replace(/\([^()]*\)/g, '').trim();
 
-            return `- ${text}${filteredAnswers.length ? ': ' : ''} ${filteredAnswers.join(', ')}`;
+            return `- ${text}${
+              filteredAnswers.length ? ': ' : ''
+            } ${filteredAnswers.join(', ')}`;
           })
           .join('\n')
       : 'Отчет заполнен. Делать ничего не надо';

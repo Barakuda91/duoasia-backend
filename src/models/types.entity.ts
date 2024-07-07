@@ -1,13 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn  } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({name: 'types'})
+@Entity({ name: 'types' })
 export class UserType {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 }
